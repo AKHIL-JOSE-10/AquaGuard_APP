@@ -9,7 +9,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';  // Import navigation hook
 import COLORS from '../../assets/consts/color.js';
 
@@ -24,52 +25,38 @@ const Home = () => {
 
         <ImageBackground
           style={{height: 300}}
-          source={require('../../assets/robot.jpg')}>
-          <View style={style.header}>
-            <Icon name="arrow-back-ios" size={28} color={COLORS.white} />
-            <Icon name="more-vert" size={28} color={COLORS.white} />
-          </View>
+          source={require('../../assets/AquaRobot.jpg')}>
         </ImageBackground>
 
         <View style={style.detailsContainer}>
           <View style={style.iconContainer}>
-            <Icon name="favorite" color={COLORS.red} size={30} />
+            <MaterialCommunityIcons name="water" color='#00BFFF' size={30} />
           </View>
 
-          <View style={{flexDirection: 'row', marginBottom: 20, justifyContent:'center'}}>
-            <Text
-              style={{
-                marginLeft: 5,
-                fontSize: 30,
-                fontWeight: 'bold',
-                color: COLORS.primary,
-              }}>
-              Welcome
-            </Text>
+          <View style={style.welcomeContainer}>
+            <Text style={style.welcomeText}>Welcome</Text>
           </View>
 
-          <Text style={style.aboutTitle}>About  Project</Text>
+          <Text style={style.aboutTitle}>About the Project</Text>
           <Text style={style.aboutDescription}>
-            Our River Cleaning Robot is designed to remove waste from rivers and water bodies, ensuring cleaner environments.
-            Equipped with advanced sensors, it monitors water quality by measuring parameters like pH levels and overall cleanliness.
-            This project aims to promote environmental sustainability and maintain the health of our waterways.
+            Our River Cleaning Robot is designed to remove waste from rivers and water bodies, ensuring cleaner environments. 
+            Equipped with advanced sensors, it monitors water quality by measuring key parameters like pH levels and overall cleanliness. 
+            This project aims to promote environmental sustainability and preserve the health of our waterways.
           </Text>
         </View>
 
         {/* Update TouchableOpacity for navigation */}
         <View style={style.footer}>
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={{fontSize: 18, fontWeight: 'bold', color: COLORS.white}}>
-              Go to
-            </Text>
+            <Text style={style.footerText}>Go to</Text>
           </View>
           
           {/* TouchableOpacity for navigation */}
           <TouchableOpacity 
             style={style.bookNowBtn}
-            onPress={() => navigation.navigate('LiveScreen')} // Navigate to the Profile screen
+            onPress={() => navigation.navigate('LiveScreen')} // Navigate to the Control panel screen
           >
-            <Text style={{color: COLORS.primary, fontSize: 16, fontWeight: 'bold'}}>
+            <Text style={style.bookNowText}>
               Control panel
             </Text>
           </TouchableOpacity>
@@ -89,6 +76,11 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  bookNowText: {
+    color: COLORS.primary,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   iconContainer: {
     height: 60,
     width: 60,
@@ -106,11 +98,29 @@ const style = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: COLORS.white,
   },
-  header: {
-    marginTop: 60,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
+  welcomeContainer: {
+    flexDirection: 'row', 
+    marginBottom: 20, 
+    justifyContent: 'center',
+  },
+  welcomeText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+    textAlign: 'center',
+  },
+  aboutTitle: {
+    marginTop: 20,
+    fontWeight: 'bold',
+    fontSize: 24,
+    color: COLORS.primary,
+  },
+  aboutDescription: {
+    marginTop: 15,
+    lineHeight: 24,
+    fontSize: 16,
+    color: COLORS.dark,
+    textAlign: 'justify', // Adds readability and structure
   },
   footer: {
     flexDirection: 'row',
@@ -122,17 +132,10 @@ const style = StyleSheet.create({
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
   },
-  aboutTitle: {
-    marginTop: 20,
+  footerText: {
+    fontSize: 18,
     fontWeight: 'bold',
-    fontSize: 20,
-    color: COLORS.primary,
-  },
-  aboutDescription: {
-    marginTop: 20,
-    lineHeight: 22,
-    fontSize: 16,
-    color: COLORS.dark,
+    color: COLORS.white,
   },
 });
 
