@@ -9,40 +9,56 @@ import {
   Image,
   ScrollView,
   TextInput,
-  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Slider from '@react-native-community/slider';
 import COLORS from '../../assets/consts/color.js';
 import { ShowToast } from '../components/Toast.js';
 
 const LiveScreen = () => {
-  const [remoteMode, setRemoteMode] = useState(true); // State to track if remote mode is active
-  const [ipAddress, setIpAddress] = useState(''); // State to hold IP address
-  const [isEditingIP, setIsEditingIP] = useState(true); // State to control if IP input is editable
+  const [remoteMode, setRemoteMode] = useState(true);
+  const [ipAddress, setIpAddress] = useState('');
+  const [isEditingIP, setIsEditingIP] = useState(true);
+  const [motorSpeed, setMotorSpeed] = useState(0);
 
-  // Function to handle button clicks (checks if IP is present)
   const handleControlAction = async (action) => {
     if (ipAddress === '') {
       ShowToast('error', "Missing IP Address, Please provide an IP address");
     } else {
       try {
-        // Build the URL dynamically based on the action
-        const url = `http://${ipAddress}/${action}`;
-        console.log(url)
-        // Send a request to the built URL
+        const url = http://${ipAddress}/${action};
+        console.log(url);
         const response = await fetch(url);
-        
+
         if (response.ok) {
-          console.log(`Successfully performed ${action} at ${url}`);
-          ShowToast('success', `Performed ${action}`);
+          ShowToast('success', Performed ${action});
         } else {
-          console.error(`Failed to perform ${action}. Response: ${response.status}`);
-          ShowToast('error', `Failed to perform ${action}`);
+          ShowToast('error', Failed to perform ${action});
         }
       } catch (error) {
-        console.error(`Error performing ${action}:`, error);
-        ShowToast('error', `Please provide valid IP address`);
+        ShowToast('error', Please provide valid IP address);
       }
+    }
+  };
+
+  const updateMotorSpeed = async (speed) => {
+    setMotorSpeed(speed);
+    if (ipAddress === '') {
+      ShowToast('error', "Missing IP Address, Please provide an IP address");
+      return;
+    }
+    try {
+      const url = http://${ipAddress}/speed?value=${speed};
+      console.log(url);
+      const response = await fetch(url);
+
+      if (response.ok) {
+        ShowToast('success', Speed set to ${speed}%);
+      } else {
+        ShowToast('error', Failed to set speed);
+      }
+    } catch (error) {
+      ShowToast('error', Please provide valid IP address);
     }
   };
 
@@ -50,27 +66,22 @@ const LiveScreen = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar translucent backgroundColor="rgba(0,0,0,0)" />
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        
-        {/* Top Image Section */}
+
         <View style={styles.imageContainer}>
-          <Image
-            source={require('../../assets/lake.jpg')}
-            style={styles.topImage}
-          />
+          <Image source={require('../../assets/lake.jpg')} style={styles.topImage} />
         </View>
 
-        {/* IP Address Input */}
         <View style={styles.ipContainer}>
           <TextInput
             style={styles.ipInput}
             placeholder="Enter IP Address"
             value={ipAddress}
-            editable={isEditingIP} // Make input field editable or not based on state
-            onChangeText={setIpAddress} // Update IP address on change
+            editable={isEditingIP}
+            onChangeText={setIpAddress}
           />
           <TouchableOpacity
             style={styles.editButton}
-            onPress={() => setIsEditingIP(!isEditingIP)} // Toggle editing state
+            onPress={() => setIsEditingIP(!isEditingIP)}
           >
             <Text style={styles.editButtonText}>
               {isEditingIP ? 'Save IP' : 'Edit IP'}
@@ -78,21 +89,15 @@ const LiveScreen = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Mode Selection Buttons */}
         <View style={styles.buttonRow}>
           <TouchableOpacity
             style={[
               styles.modeButton,
               { backgroundColor: remoteMode ? COLORS.primary : COLORS.white },
             ]}
-            onPress={() => setRemoteMode(true)} // Set to Remote mode
+            onPress={() => setRemoteMode(true)}
           >
-            <Text
-              style={{
-                color: remoteMode ? COLORS.white : COLORS.black,
-                fontWeight: 'bold',
-              }}
-            >
+            <Text style={{ color: remoteMode ? COLORS.white : COLORS.black, fontWeight: 'bold' }}>
               Remote
             </Text>
           </TouchableOpacity>
@@ -101,29 +106,22 @@ const LiveScreen = () => {
               styles.modeButton,
               { backgroundColor: !remoteMode ? COLORS.primary : COLORS.white },
             ]}
-            onPress={() => setRemoteMode(false)} // Set to Automatic mode
+            onPress={() => setRemoteMode(false)}
           >
-            <Text
-              style={{
-                color: !remoteMode ? COLORS.white : COLORS.black,
-                fontWeight: 'bold',
-              }}
-            >
+            <Text style={{ color: !remoteMode ? COLORS.white : COLORS.black, fontWeight: 'bold' }}>
               Automatic
             </Text>
           </TouchableOpacity>
         </View>
 
-        {/* Conditional Rendering */}
         {remoteMode ? (
           <View style={styles.rowContainer}>
-            {/* Boat Control Panel */}
             <View style={styles.panel}>
               <View style={styles.controlsContainer}>
                 <View style={styles.row}>
                   <TouchableOpacity
                     style={styles.upButton}
-                    onPress={() => handleControlAction('up')} // Send request for 'up'
+                    onPress={() => handleControlAction('forward')}
                   >
                     <Icon name="arrow-upward" size={24} color={COLORS.white} />
                   </TouchableOpacity>
@@ -132,21 +130,21 @@ const LiveScreen = () => {
                 <View style={styles.row}>
                   <TouchableOpacity
                     style={styles.leftButton}
-                    onPress={() => handleControlAction('left')} // Send request for 'left'
+                    onPress={() => handleControlAction('left')}
                   >
                     <Icon name="arrow-back" size={24} color={COLORS.white} />
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     style={styles.pauseButton}
-                    onPress={() => handleControlAction('pause')} // Send request for 'pause'
+                    onPress={() => handleControlAction('stop')}
                   >
                     <Icon name="pause" size={24} color={COLORS.white} />
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     style={styles.rightButton}
-                    onPress={() => handleControlAction('right')} // Send request for 'right'
+                    onPress={() => handleControlAction('right')}
                   >
                     <Icon name="arrow-forward" size={24} color={COLORS.white} />
                   </TouchableOpacity>
@@ -155,22 +153,37 @@ const LiveScreen = () => {
                 <View style={styles.row}>
                   <TouchableOpacity
                     style={styles.downButton}
-                    onPress={() => handleControlAction('down')} // Send request for 'down'
+                    onPress={() => handleControlAction('reverse')}
                   >
                     <Icon name="arrow-downward" size={24} color={COLORS.white} />
                   </TouchableOpacity>
+                </View>
+
+                <View style={styles.sliderContainer}>
+                  <Text style={styles.sliderLabel}>Motor Speed: {motorSpeed}%</Text>
+                  <Slider
+                    style={styles.slider}
+                    minimumValue={0}
+                    maximumValue={100}
+                    step={25}
+                    value={motorSpeed}
+                    onValueChange={(value) => setMotorSpeed(value)}
+                    onSlidingComplete={(value) => updateMotorSpeed(value)}
+                    minimumTrackTintColor={COLORS.primary}
+                    maximumTrackTintColor={COLORS.grey}
+                    thumbTintColor={COLORS.primary}
+                  />
                 </View>
               </View>
             </View>
           </View>
         ) : (
-          <Text style={styles.automaticText}>Automatic mode enabled</Text> // Show this in Automatic mode
+          <Text style={styles.automaticText}>Automatic mode enabled</Text>
         )}
       </ScrollView>
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -196,10 +209,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical:15,
+    marginVertical: 15,
     marginTop: -35,
-    paddingLeft:12,
-    paddingRight:12
+    paddingLeft: 12,
+    paddingRight: 12,
   },
   ipInput: {
     backgroundColor: COLORS.white,
@@ -310,6 +323,20 @@ const styles = StyleSheet.create({
     color: 'purple',
     marginTop: 20,
     textAlign: 'center',
+  },
+  sliderContainer: {
+    width: '90%',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  sliderLabel: {
+    fontSize: 16,
+    color: COLORS.dark,
+    marginBottom: 10,
+  },
+  slider: {
+    width: '100%',
+    height: 40,
   },
 });
 
